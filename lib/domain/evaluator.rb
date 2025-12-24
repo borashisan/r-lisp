@@ -17,11 +17,23 @@ module Domain
       private
 
       def evaluate_list(exp, env)
-        operator = exp[0]
+        operator, *args = exp
 
         case operator
         when :quote
-          exp[1]
+          args[0]
+        when :define
+          symbol, value_exp = args
+          value = eval(value_exp, env)
+          env.define(symbol, value)
+          value
+        when :if
+          test_exp, then_exp, else_exp = args
+          if eval(test_exp, env)
+            eval(then_exp, env)
+          else
+            eval(else_exp, env)
+          end
         else
           # TODO: ifやdefineを実装していく
           raise "Unknown operator: #{operator}"

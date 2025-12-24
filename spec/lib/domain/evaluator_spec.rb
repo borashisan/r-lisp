@@ -15,5 +15,17 @@ RSpec.describe Domain:: Evaluator do
       expression = [:quote, [:a, :b]]
       expect(Domain::Evaluator.eval(expression, env)).to eq([:a, :b])
     end
+
+    it 'defineで変数を評価できること' do
+      Domain::Evaluator.eval([:define, :a, 100], env)
+      expect(env.get(:a)).to eq(100)
+    end
+
+    it 'ifで条件分岐ができること' do
+      expect(Domain::Evaluator.eval([:if, 1, 10, 20], env)).to eq(10)
+
+      env.define(:condition, false)
+      expect(Domain::Evaluator.eval([:if, :condition, 10, 20], env)).to eq(20)
+    end
   end
 end
