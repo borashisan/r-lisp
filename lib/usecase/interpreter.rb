@@ -6,9 +6,13 @@ module Usecase
     end
 
     def execute(code)
-      tokens = Infrastructure::Lexer.tokenize(code);
-      expression = Infrastructure::Parser.parse(tokens);
-      Domain::Evaluator.eval(expression, @global_env)
+      tokens = Infrastructure::Lexer.tokenize(code)
+      last_result = nil
+      until tokens.empty?
+        expression = Infrastructure::Parser.parse(tokens)
+        last_result = Domain::Evaluator.eval(expression, @global_env)
+      end
+      last_result
     end
 
     private
@@ -30,6 +34,9 @@ module Usecase
       @global_env.define(:<, ->(args) { Infrastructure::Primitives.lt(args[0], args[1]) })
       @global_env.define(:>=, ->(args) { Infrastructure::Primitives.ge(args[0], args[1]) })
       @global_env.define(:<=, ->(args) { Infrastructure::Primitives.le(args[0], args[1]) })
+
+      @global_env.define(:display, ->(args) { Infrastructure::Primitives.display(args[0]) })
+      @global_env.define(:newline, ->(_) { Infrastructure::Primitives.newline })
     end
   end
 end

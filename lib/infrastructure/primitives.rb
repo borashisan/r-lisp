@@ -33,5 +33,15 @@ module Infrastructure
     def self.le(a, b) = a <= b
     def self.ge(a, b) = a >= b
 
+    def self.display(val)
+      print val
+      val
+    end
+
+    def self.newline
+      puts
+      nil
+    end
+
   end
 end

@@ -1,42 +1,42 @@
-# bin/rlisp.rb
+require 'readline'
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'r_lisp'
-require 'readline'
 
-interpreter = Usecase::Interpreter.new
+begin
+  interpreter = Usecase::Interpreter.new
 
-# 引数がある場合はファイル実行モード
-if ARGV.any?
-  filename = ARGV[0]
-  unless File.exist?(filename)
-    puts "Error: File not found: #{filename}"
-    exit 1
-  end
-
-  begin
-    # ファイル全体を読み込んで実行
-    code = File.read(filename)
-    # 複数のS式（(define ...) (fact 5)など）が並んでいる場合に対応するため
-    # 簡易的に1つずつパースして評価するループを回すのが理想ですが、
-    # 今のParserは1つのS式を想定しているので、まずは一括評価を試みます。
-    result = interpreter.execute(code)
-    p result unless result.nil?
-  rescue StandardError => e
-    puts "Error during execution: #{e.message}"
-    exit 1
-  end
-
-# 引数がない場合はREPLモード
-else
-  puts "R-Lisp REPL (Type 'exit' to quit)"
-  loop do
-    line = Readline.readline("r-lisp> ", true)
-    break if line.nil? || line == "exit"
-    next if line.strip.empty?
-    begin
-      p interpreter.execute(line)
-    rescue StandardError => e
-      puts "Error: #{e.message}"
+  if ARGV.any?
+    filename = ARGV[0]
+    unless File.exist?(filename)
+      puts "Error: File not found: #{filename}"
+      exit 1
     end
+
+    begin
+      code = File.read(filename)
+      interpreter.execute(code)
+    rescue StandardError => e
+      puts "Error during execution: #{e.message}"
+      exit 1
+    end
+  else
+    puts "\e[32;1mWelcome to R-Lisp REPL\e[0m"
+    puts "Type 'exit' to exit"
+
+    loop do
+      line = Readline.readline("r-lisp> ", true)
+      break if line.nil? || line == "exit"
+      next if line.strip.empty?
+
+      begin
+        result = interpreter.execute(line)
+        puts "\e[36m=> \e[0m#{result.inspect}"
+      rescue StandardError => e
+        puts "\e[36m=> \e[0m#{e.message}"
+      end
+    end
+    puts "Bye!"
   end
+rescue Interrupt
+  puts "\nBye!"
 end
