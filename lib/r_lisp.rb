@@ -1,0 +1,6 @@
+require_relative 'domain/environment'
+require_relative 'domain/evaluator'
+require_relative 'infrastructure/lexer'
+require_relative 'infrastructure/parser'
+require_relative 'infrastructure/primitives'
+require_relative 'usecase/interpreter'
