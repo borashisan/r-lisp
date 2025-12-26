@@ -22,5 +22,16 @@ module Infrastructure
     def self.eq?(a, b)
       a == b
     end
+
+    def self.add(a, b) = a + b
+    def self.sub(a, b) = a - b
+    def self.mul(a, b) = a * b
+    def self.div(a, b) = a.fdiv(b)
+
+    def self.lt(a, b) = a < b
+    def self.gt(a, b) = a > b
+    def self.le(a, b) = a <= b
+    def self.ge(a, b) = a >= b
+
   end
 end
