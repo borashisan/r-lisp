@@ -35,8 +35,9 @@ module Domain
             eval(else_exp, env)
           end
         else
-          # TODO: ifやdefineを実装していく
-          raise "Unknown operator: #{operator}"
+          procedure = eval(operator, env)
+          evaluated_args = args.map { |arg| eval(arg, env) }
+          procedure.call(evaluated_args)
         end
       end
     end
