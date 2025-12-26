@@ -19,7 +19,7 @@ module Infrastructure
       !exp.is_a?(Array)
     end
 
-    def self.eq(a, b)
+    def self.eq?(a, b)
       a == b
     end
   end

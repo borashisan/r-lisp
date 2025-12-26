@@ -19,7 +19,7 @@ module Usecase
       @global_env.define(:cdr, ->(args) { Infrastructure::Primitives.cdr(args[0]) })
       @global_env.define(:cons, ->(args) { Infrastructure::Primitives.cons(args[0], args[1]) })
       @global_env.define(:atom, ->(args) { Infrastructure::Primitives.atom(args[0]) })
-      @global_env.define(:eq, ->(args) { Infrastructure::Primitives.eq(args[0], args[1]) })
+      @global_env.define(:eq?, ->(args) { Infrastructure::Primitives.eq?(args[0], args[1]) })
     end
   end
 end
