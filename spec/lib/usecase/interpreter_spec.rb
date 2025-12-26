@@ -25,4 +25,24 @@ RSpec.describe Usecase::Interpreter do
     interpreter.execute("(define square (lambda (x) (* x x)))")
     expect(interpreter.execute("(square 4)")).to eq(16)
   end
+
+  it '再帰(階乗)が正しく計算できること' do
+    interpreter.execute("(define fact (lambda (n) (if (< n 1) 1 (* n (fact (- n 1))))))")
+
+    expect(interpreter.execute("(fact 5)")).to eq(120)
+    expect(interpreter.execute("(fact 10)")).to eq(3628800)
+  end
+
+  it 'cond を使った再帰が動作すること' do
+    # フィボナッチ数列
+    # (define fib (lambda (n) (cond ((eq n 0) 0) ((eq n 1) 1) (else (+ (fib (- n 1)) (fib (- n 2)))))))
+    code = <<-LISP
+      (define fib (lambda (n)
+        (cond ((eq? n 0) 0)
+              ((eq? n 1) 1)
+              (else (+ (fib (- n 1)) (fib (- n 2)))))))
+    LISP
+    interpreter.execute(code)
+    expect(interpreter.execute("(fib 7)")).to eq(13)
+  end
 end

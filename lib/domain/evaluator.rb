@@ -34,6 +34,14 @@ module Domain
           else
             eval(else_exp, env)
           end
+        when :cond
+          args.each do |clause|
+            test, action = clause
+            if test == :else || eval(test, env)
+              return eval(action, env)
+            end
+          end
+          nil
         when :lambda
           params, body = args
           lambda do |actual_args|
