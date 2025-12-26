@@ -34,6 +34,15 @@ module Domain
           else
             eval(else_exp, env)
           end
+        when :lambda
+          params, body = args
+          lambda do |actual_args|
+            new_env = Environment.new(env)
+            params.zip(actual_args).each do |name, val|
+              new_env.define(name, val)
+            end
+            eval(body, new_env)
+          end
         else
           procedure = eval(operator, env)
           evaluated_args = args.map { |arg| eval(arg, env) }
